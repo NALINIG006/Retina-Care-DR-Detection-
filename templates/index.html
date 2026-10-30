@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetinaCare AI | Screening</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>RetinaCare AI</h1>
+    <p>Explainable AI for Diabetic Retinopathy Screening</p>
+</header>
+
+<main>
+    <section class="card">
+        <p class="muted">AI-ASSISTED RETINAL IMAGE ANALYSIS</p>
+        <h2>Screening Dashboard</h2>
+        <p>
+            Upload a retinal fundus image to view the model's prediction
+            and Grad-CAM visual explanation.
+        </p>
+
+        <form action="{{ url_for('predict') }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <label for="image"><strong>Select retinal image</strong></label>
+
+            <input
+                type="file"
+                id="image"
+                name="image"
+                accept=".png,.jpg,.jpeg"
+                required
+            >
+
+            <p class="muted">
+                Supported formats: JPG, JPEG, PNG. Maximum size: 10 MB.
+            </p>
+
+            <button type="submit">Analyse Image</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h3>How it works</h3>
+        <p><strong>01 — Upload</strong><br>
+        Select a retinal fundus image from your device.</p>
+
+        <p><strong>02 — AI prediction</strong><br>
+        The trained model predicts one of its seven classes.</p>
+
+        <p><strong>03 — Visual explanation</strong><br>
+        Grad-CAM creates a heatmap showing areas that influenced the model.</p>
+    </section>
+
+    <div class="disclaimer">
+        <strong>Research disclaimer:</strong>
+        This tool is a student research project, not a diagnostic device.
+        Results must not be used to make medical decisions.
+        Consult a qualified eye-care professional for medical assessment.
+    </div>
+</main>
+
+<footer>
+    Final-Year AI &amp; Data Science Project | RetinaCare AI
+</footer>
+
+</body>
+</html>

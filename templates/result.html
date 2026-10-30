@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetinaCare | Prediction Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f6fc;
+            color: #193252;
+        }
+
+        header {
+            background: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .logo {
+            color: #2463c5;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .tag {
+            background: #edf3ff;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            color: #526782;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(25,50,82,0.08);
+        }
+
+        .success {
+            background: #e8f8ef;
+            color: #16834a;
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .success h1 {
+            margin: 0 0 10px;
+            font-size: 27px;
+        }
+
+        .success p {
+            margin: 0;
+            color: #526782;
+            line-height: 1.6;
+        }
+
+        .result-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .retina-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            background: #080b10;
+            border-radius: 10px;
+            border: 1px solid #e0e7f0;
+        }
+
+        .caption {
+            text-align: center;
+            color: #63748a;
+            margin: 10px 0 25px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .details {
+            border: 1px solid #e0e7f0;
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .label {
+            color: #63748a;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .prediction {
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            overflow-wrap: anywhere;
+            color: #2463c5;
+        }
+
+        .confidence {
+            font-size: 32px;
+            color: #168d52;
+            font-weight: bold;
+            margin: 8px 0 20px;
+        }
+
+        .section-title {
+            font-size: 19px;
+            margin: 28px 0 12px;
+            color: #193252;
+        }
+
+        .info-box {
+            background: #f5f8fd;
+            border: 1px solid #e1eaf5;
+            border-radius: 12px;
+            padding: 17px;
+            margin-top: 12px;
+            line-height: 1.7;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .severity-box {
+            background: #fff7e8;
+            border: 1px solid #f2dfb5;
+            border-radius: 12px;
+            padding: 17px;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .severity-box p,
+        .info-box p {
+            margin-bottom: 0;
+        }
+
+        .notice {
+            background: #edf5ff;
+            color: #245a9d;
+            padding: 16px;
+            border-radius: 10px;
+            line-height: 1.7;
+            font-size: 13px;
+            margin-top: 22px;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #2475e8;
+            color: white;
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 9px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #165dc4;
+        }
+
+        footer {
+            text-align: center;
+            color: #8391a3;
+            font-size: 13px;
+            padding: 25px;
+            background: white;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 18px;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .tag {
+                font-size: 11px;
+            }
+
+            main {
+                margin: 20px auto;
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .result-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .retina-image {
+                height: 260px;
+            }
+
+            .success h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">RetinaCare</div>
+    <div class="tag">AI Research Prototype</div>
+</header>
+
+<main>
+    <section class="card">
+
+        <div class="success">
+            <h1>✓ Analysis Completed</h1>
+            <p>
+                Your uploaded retinal image has been processed
+                by the AI model.
+            </p>
+        </div>
+
+        <div class="result-layout">
+
+            <!-- LEFT SIDE: IMAGES -->
+
+            <div>
+                <h3>Uploaded Retinal Image</h3>
+
+                <img
+                    src="{{ image_path }}"
+                    alt="Uploaded retinal image"
+                    class="retina-image"
+                >
+
+                <p class="caption">
+                    Original retinal image submitted for analysis.
+                </p>
+
+                <h3>Grad-CAM Heatmap</h3>
+
+                <img
+                    src="{{ gradcam_path }}"
+                    alt="Grad-CAM heatmap"
+                    class="retina-image"
+                >
+
+                <p class="caption">
+                    The heatmap indicates image regions that may have
+                    influenced the AI prediction. Highlighted regions
+                    are not confirmed lesions or measured damage areas.
+                </p>
+            </div>
+
+            <!-- RIGHT SIDE: RESULT -->
+
+            <div class="details">
+
+                <div class="label">AI-Predicted Class</div>
+
+                <div class="prediction">
+                    {{ predicted_class }}
+                </div>
+
+                <div class="label">Model Confidence Score</div>
+
+                <div class="confidence">
+                    {{ confidence }}%
+                </div>
+                <h3 class="section-title">Severity Level</h3>
+                <div class="info-box">
+                    <strong>{{ severity }}</strong>
+                </div>
+
+                <h3 class="section-title">Retinal Condition Explanation</h3>
+                <div class="info-box">
+                    {{ description }}
+                </div>
+
+                <h3 class="section-title">Recommended Next Steps</h3>
+                <div class="info-box">
+                    {{ recommendation }}
+                </div>
+
+
+                <div class="info-box">
+                    <strong>What does confidence mean?</strong>
+                    <p>
+                        This score represents the model's output for
+                        its selected class. It does not guarantee that
+                        the prediction is medically correct.
+                    </p>
+                </div>
+
+                <!-- SEVERITY INTERPRETATION -->
+
+                <h3 class="section-title">Severity Interpretation</h3>
+
+                {% set stage = predicted_class | lower | trim %}
+
+                {% if 'no npdr' in stage
+                      or 'no dr' in stage
+                      or 'no diabetic retinopathy' in stage
+                      or stage in ['0', 'normal'] %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: No apparent DR</strong>
+                        <p>
+                            The model assigned a category indicating
+                            no apparent diabetic retinopathy.
+                            This does not rule out other eye problems
+                            or guarantee that the retina is healthy.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "The model did not classify this image as showing diabetic retinopathy. A qualified eye-care professional must assess the image and the patient's medical history." %}
+
+                {% elif 'mild' in stage and 'pdr' not in stage %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: Mild NPDR</strong>
+                        <p>
+                            Mild non-proliferative diabetic retinopathy
+                            is an early category. Small retinal blood
+                            vessel changes, such as microaneurysms,
+                            may occur at this stage.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "Mild NPDR is an early stage of diabetic retinopathy. The actual retinal findings and recommended follow-up must be confirmed by an eye specialist." %}
+
+                {% elif 'moderate' in stage and 'pdr' not in stage %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: Moderate NPDR</strong>
+                        <p>
+                            This category may involve more retinal
+                            blood vessel abnormalities than mild NPDR.
+                            The model label alone cannot confirm
+                            which abnormalities are present.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "Moderate NPDR may involve more retinal blood vessel changes. Arrange an eye examination to confirm the stage and appropriate follow-up." %}
+
+                {% elif 'very severe' in stage and 'pdr' not in stage %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: Very severe NPDR</strong>
+                        <p>
+                            If this is the intended dataset label,
+                            it indicates a more advanced non-proliferative
+                            category. Prompt professional assessment
+                            is important.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "This dataset category may indicate advanced non-proliferative changes. Confirm the label definition and arrange prompt assessment by an ophthalmologist." %}
+
+                {% elif 'severe' in stage and 'pdr' not in stage %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: Severe NPDR</strong>
+                        <p>
+                            Severe non-proliferative diabetic retinopathy
+                            can carry a higher risk of progression.
+                            Prompt assessment by an ophthalmologist
+                            is recommended.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "Severe NPDR requires prompt professional assessment. The model prediction should not be used alone to determine treatment." %}
+
+                {% elif 'pdr' in stage
+                      or 'proliferative' in stage %}
+
+                    <div class="severity-box">
+                        <strong>Predicted category: PDR-related class</strong>
+                        <p>
+                            Proliferative diabetic retinopathy can
+                            involve abnormal new blood vessel growth
+                            and may threaten vision. The precise
+                            meaning of this dataset class must be
+                            checked against its original definitions.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "A PDR-related prediction needs prompt assessment by an ophthalmologist. This AI result is not a confirmed clinical diagnosis." %}
+
+                {% else %}
+
+                    <div class="severity-box">
+                        <strong>Severity mapping needs verification</strong>
+                        <p>
+                            The model predicted "{{ predicted_class }}".
+                            Its exact clinical severity has not been
+                            verified by this page. Check the dataset's
+                            original class definitions before assigning
+                            a severity level.
+                        </p>
+                    </div>
+
+                    {% set explanation =
+                    "The model returned a dataset class, but the clinical meaning of that class needs verification. A qualified eye-care professional should assess the image." %}
+
+                {% endif %}
+
+                <!-- EXPLANATION -->
+
+                <h3 class="section-title">Detailed Result Explanation</h3>
+
+                <div class="info-box">
+                    {{ explanation }}
+                </div>
+
+                <!-- RETINA AFFECTED -->
+
+                <h3 class="section-title">
+                    How Much of the Retina Is Affected?
+                </h3>
+
+                <div class="info-box">
+                    <strong>Exact percentage: Not available</strong>
+                    <p>
+                        The current classification model predicts a
+                        category. It does not measure the percentage
+                        or area of the retina affected by disease.
+                        The Grad-CAM heatmap shows model attention,
+                        not a measured damage percentage.
+                    </p>
+                    <p>
+                        Estimating affected retinal area would require
+                        a separately validated image segmentation
+                        method and appropriate medical validation.
+                    </p>
+                </div>
+
+                <!-- NEXT STEPS -->
+
+                <h3 class="section-title">General Eye-Care Advice</h3>
+
+                <div class="info-box">
+                    <ul>
+                        <li>
+                            Consult a qualified ophthalmologist to
+                            confirm the findings.
+                        </li>
+                        <li>
+                            If you have diabetes, follow the regular
+                            diabetic eye screening schedule recommended
+                            by your healthcare professional.
+                        </li>
+                        <li>
+                            Do not start, stop, or change treatment
+                            based only on this AI prediction.
+                        </li>
+                        <li>
+                            Seek urgent medical care for sudden vision
+                            loss or sudden significant changes in vision.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- MEDICAL NOTICE -->
+
+                <div class="notice">
+                    <strong>Important Medical Notice</strong>
+                    <p>
+                        RetinaCare is an experimental final-year
+                        academic project, not a certified diagnostic
+                        system. Predictions may be incorrect, and
+                        model confidence does not necessarily represent
+                        clinical accuracy. Please consult a qualified
+                        ophthalmologist for diagnosis and treatment.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('home') }}" class="button">
+                &#8592; Upload Another Image
+            </a>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    RetinaCare | Final-Year Academic Project
+</footer>
+
+</body>
+</html>
