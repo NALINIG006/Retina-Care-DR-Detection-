@@ -232,6 +232,8 @@ def predict():
     print("PREDICT ROUTE STARTED", flush=True)
     if "image" not in request.files:
         return "Please select a retinal image.", 400
+    file = request.files["image"]
+    print("IMAGE RECEIVED", flush=True)
 
     file = request.files["image"]
 
