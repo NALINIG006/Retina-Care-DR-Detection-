@@ -269,19 +269,26 @@
                     Original retinal image submitted for analysis.
                 </p>
 
+            {% if gradcam_path %}
                 <h3>Grad-CAM Heatmap</h3>
 
                 <img
-                    src="{{ gradcam_path }}"
-                    alt="Grad-CAM heatmap"
-                    class="retina-image"
+                   src="{{ gradcam_path }}"
+                   alt="Grad-CAM heatmap"
+                   class="retina-image"
                 >
 
                 <p class="caption">
-                    The heatmap indicates image regions that may have
-                    influenced the AI prediction. Highlighted regions
-                    are not confirmed lesions or measured damage areas.
+                   The heatmap indicates image regions that may have
+                   influenced the AI prediction. Highlighted regions
+                   are not confirmed lesions or measured damage areas.
                 </p>
+            {% else %}
+               <h3>Grad-CAM Heatmap</h3>
+               <p class="caption">
+                  Heatmap temporarily unavailable during testing.
+               </p>
+            {% endif %}
             </div>
 
             <!-- RIGHT SIDE: RESULT -->

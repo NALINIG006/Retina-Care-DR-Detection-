@@ -229,6 +229,7 @@ def generate_gradcam(image_array, predicted_index):
     return Image.fromarray(heatmap_rgb)
 @app.route("/predict", methods=["POST"])
 def predict():
+    print("PREDICT ROUTE STARTED", flush=True)
     if "image" not in request.files:
         return "Please select a retinal image.", 400
 
@@ -255,6 +256,7 @@ def predict():
 
         # AI prediction
         predictions = model.predict(image_array, verbose=0)[0]
+        print("PREDICTION COMPLETED")
 
         print("\n--- DEBUG: MODEL PREDICTIONS ---")
         for i, score in enumerate(predictions):
@@ -383,9 +385,8 @@ def predict():
         image.save(save_path)
 
         image_path = f"/static/uploads/{saved_name}"
-        gradcam_image = generate_gradcam(
-            image_array, predicted_index
-        )
+        gradcam_image = generate_gradcam( image_array, predicted_index )
+        print("GRADCAM COMPLETED")
 
         gradcam_name = f"gradcam_{saved_name.rsplit('.', 1)[0]}.jpg"
         gradcam_file = UPLOAD_FOLDER / gradcam_name
