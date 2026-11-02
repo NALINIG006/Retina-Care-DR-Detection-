@@ -250,6 +250,7 @@ def predict():
         # Read and validate the uploaded image
         image = Image.open(file.stream).convert("RGB")
         image.load()
+        print("IMAGE LOADED", flush=True)
 
         # Prepare image for the model
         model_image = image.resize(IMAGE_SIZE)
